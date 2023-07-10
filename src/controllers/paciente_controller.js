@@ -1,7 +1,40 @@
 import Paciente from "../models/Paciente.js"
 import mongoose from "mongoose"
 
-
+/**
+ * @swagger
+ * /ruta-de-la-api/listar-pacientes:
+ *   get:
+ *     summary: Listar pacientes
+ *     description: Obtiene la lista de pacientes asociados al veterinario.
+ *     security:
+ *       - BearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Lista de pacientes obtenida con éxito.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Paciente'
+ *       401:
+ *         description: No se proporcionó un token válido.
+ *       404:
+ *         description: No se encontraron pacientes.
+ */
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Paciente:
+ *       type: object
+ *       properties:
+ *         nombre:
+ *           type: string
+ *           description: El nombre del paciente.
+ * 
+ */ 
 const listarPacientes = async (req,res)=>{
     const pacientes = await Paciente.find({estado:true}).where('veterinario').equals(req.veterinarioBDD).select("-salida -createdAt -updatedAt -__v").populate('veterinario','_id nombre apellido')
     res.status(200).json(pacientes)
